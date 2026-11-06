@@ -1,6 +1,6 @@
 'use client'
 
-import React, { type ReactNode } from 'react'
+import React, { type ReactNode, useState, useEffect } from 'react'
 import { AnimatorGeneralProvider, BleepsProvider, Animator } from '@arwes/react'
 import { IconoirProvider } from 'iconoir-react'
 import { useAtom } from 'jotai'
@@ -29,6 +29,12 @@ const LayoutRoot = (props: {
 }): JSX.Element => {
   const [isMotionEnabled] = useAtom(atomMotionEnabled)
   const [isAudioEnabled] = useAtom(atomAudioEnabled)
+  const [shouldAnimateHeader, setShouldAnimateHeader] = useState(true)
+
+  useEffect(() => {
+    // Only animate header on initial load; on view transitions, keep it static
+    setShouldAnimateHeader(false)
+  }, [])
 
   return (
     <IconoirProvider {...iconProviderProps}>
@@ -58,9 +64,9 @@ const LayoutRoot = (props: {
 
               {/* The page is not held behind the header: both come in together, a
                   step apart, so the content in the middle is not left waiting. */}
-              <Animator combine manager="stagger">
+              <Animator combine manager="stagger" disabled={!shouldAnimateHeader}>
                 <div className="relative flex-1 flex flex-col min-w-0 min-h-0">
-                  <Animator combine>
+                  <Animator combine disabled={!shouldAnimateHeader}>
                     <Header
                       blogPath={props.blogPath}
                       navItems={props.navItems}
