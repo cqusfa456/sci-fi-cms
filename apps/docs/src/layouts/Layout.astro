@@ -200,9 +200,13 @@ const serverPaths = cmsPages
     */}
     <script is:inline>
       (() => {
-        const root = document.documentElement
-        root.classList.add('app-intro')
-        window.setTimeout(() => root.classList.remove('app-intro'), 2500)
+        // Only run app-intro on first load, not on view transitions
+        if (!window.__appIntroAlreadyRan) {
+          window.__appIntroAlreadyRan = true
+          const root = document.documentElement
+          root.classList.add('app-intro')
+          window.setTimeout(() => root.classList.remove('app-intro'), 2500)
+        }
       })()
     </script>
 
@@ -213,6 +217,13 @@ const serverPaths = cmsPages
 
       html.app-intro .app-frame {
         opacity: 0;
+      }
+
+      /* On view transitions, always keep app-frame visible */
+      @supports (view-transition-name: auto) {
+        ::view-transition-group(root) .app-frame {
+          opacity: 1 !important;
+        }
       }
 
       @media (prefers-reduced-motion: reduce) {
