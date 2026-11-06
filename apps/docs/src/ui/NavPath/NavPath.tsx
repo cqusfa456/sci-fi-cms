@@ -8,15 +8,6 @@ type NavPathProps = Omit<BreadcrumbsProps, 'items'>
 const paths: Record<string, string> = {
   '/': 'Root',
   '/docs': 'Docs',
-  '/docs/design': 'Design',
-  '/docs/develop': 'Develop',
-  '/docs/develop/fundamentals': 'Fundamentals',
-  '/docs/develop/vanilla': 'Vanilla',
-  '/docs/develop/tailwind': 'Tailwind',
-  '/docs/develop/react': 'React',
-  '/docs/develop/solid': 'Solid',
-  '/docs/develop/svelte': 'Svelte',
-  '/docs/community': 'Community',
   '/demos': 'Demos'
 }
 

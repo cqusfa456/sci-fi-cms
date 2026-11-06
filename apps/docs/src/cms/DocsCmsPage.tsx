@@ -3,7 +3,7 @@
 import { Animated, Animator } from '@arwes/react'
 import { animate, stagger } from 'motion'
 
-import { LayoutDevelop } from '@/app/docs/develop/LayoutDevelop'
+import { LayoutDocs } from './LayoutDocs'
 import { CmsAnimator } from './CmsAnimator'
 import { CmsDocsNav, type CmsNavDoc, type CmsNavSection } from './CmsDocsNav'
 import { stripLeadingTitle } from './content'
@@ -51,7 +51,7 @@ const DocsCmsPage = (props: DocsCmsPageProps): JSX.Element => {
 
   return (
     <CmsAnimator>
-      <LayoutDevelop
+      <LayoutDocs
         nav={
           <CmsDocsNav
             sections={sections}
@@ -91,7 +91,7 @@ const DocsCmsPage = (props: DocsCmsPageProps): JSX.Element => {
             dangerouslySetInnerHTML={{ __html: bodyHtml }}
           />
         </Animator>
-      </LayoutDevelop>
+      </LayoutDocs>
     </CmsAnimator>
   )
 }
