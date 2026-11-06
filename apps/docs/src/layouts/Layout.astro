@@ -8,7 +8,7 @@ import CmsLayout from '@/components/CmsLayout.astro'
 import CmsComponent from '@/components/CmsComponent.astro'
 import { CONTENT_ELEMENT_ID } from '@/lib/page-content'
 import { collectionIndexHref, getCollectionPrefixes, getSiteRouting, pagePath } from '@/lib/cms-collections'
-import { getLayout, getMenu, getNavigation } from '@/lib/site-content'
+import { findMenu, getLayout, getMenu, getNavigation } from '@/lib/site-content'
 
 import '@/ui/globals.css'
 
@@ -53,7 +53,8 @@ const navItems = await getNavigation(pathname, navKey)
 
 // The header's own links (the right-hand side) are the same on every page: they are
 // a menu of their own, edited with the rest of the chrome.
-const actionItems = await getMenu('links')
+// A `links` component with no items hides them; no component keeps the built-in ones.
+const actionItems = await findMenu('links')
 
 // Where the logo points is a link too, so it is edited like every other one: the
 // `logo` component carries a one-entry menu whose `href` is the site's home (the

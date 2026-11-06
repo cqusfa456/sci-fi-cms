@@ -105,12 +105,19 @@ export const getNavigation = async (pathname: string, pageKey?: string): Promise
  * A named menu, wherever the page is: the header's own links are the same on every
  * page, so they are read by key rather than by the path rule.
  */
-export const getMenu = async (key: string): Promise<NavItem[]> => {
+export const getMenu = async (key: string): Promise<NavItem[]> => (await findMenu(key)) ?? []
+
+/**
+ * Like `getMenu`, but tells "no such menu" (undefined) apart from "a menu with no
+ * links" ([]): a site that publishes an empty menu means to show nothing, not the
+ * shell's built-in links.
+ */
+export const findMenu = async (key: string): Promise<NavItem[] | undefined> => {
   const entries = await getCollection('components')
   const match = entries.find((entry: any) => componentKey(entry) === key)
   return match?.data.items !== undefined && match.data.items !== null
     ? parseItems(match.data.items)
-    : []
+    : undefined
 }
 
 /** Source of the layout a page should be wrapped in, or null when there is none. */

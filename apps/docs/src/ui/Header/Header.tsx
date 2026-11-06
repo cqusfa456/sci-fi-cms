@@ -53,8 +53,9 @@ interface HeaderProps {
    */
   navContent?: ReactNode
   /**
-   * Links for the right-hand side, from the CMS `links` component. Empty means the
-   * site's built-in links are used.
+   * Links for the right-hand side, from the CMS `links` component. Undefined (no
+   * such component) means the site's built-in links are used; an empty list shows
+   * none.
    */
   actionItems?: Array<{ label: string; href: string; icon?: string }>
   /**
@@ -99,7 +100,7 @@ const Header = memo((props: HeaderProps): JSX.Element => {
     logoContent,
     hideMenu
   } = props
-  const actionLinks = actionItems && actionItems.length > 0 ? actionItems : DEFAULT_ACTION_LINKS
+  const actionLinks = actionItems ?? DEFAULT_ACTION_LINKS
   const hasCmsNav = !navContent && !!navItems && navItems.length > 0
   const hasNavContent = !!navContent
 
@@ -371,49 +372,55 @@ const Header = memo((props: HeaderProps): JSX.Element => {
                   {/*
                     The right-hand links are a CMS component too (Admin → Content →
                     组件 → links): the shell shows the menu it publishes, and falls back
-                    to the links the site ships with when there is none.
+                    to the links the site ships with when there is none. A menu with
+                    no links hides the group, so no empty frame is drawn.
                   */}
-                  <Menu className={HEIGHT_CLASS}>
-                    {actionLinks.map((item) => {
-                      const isSponsor = item.icon === 'sponsor'
-                      return (
-                        <Animator key={`${item.label}-${item.href}`}>
-                          <MenuItem
-                            className={cx(isSponsor && 'group hover:!text-fuchsia-300')}
-                            animated={['flicker']}
-                          >
-                            <a
-                              className={cx('!gap-0', isSponsor && 'group-hover:text-fuchsia-300')}
-                              href={item.href}
-                              target={item.icon ?? item.label.toLowerCase()}
-                              title={item.label}
+                  {actionLinks.length > 0 && (
+                    <Menu className={HEIGHT_CLASS}>
+                      {actionLinks.map((item) => {
+                        const isSponsor = item.icon === 'sponsor'
+                        return (
+                          <Animator key={`${item.label}-${item.href}`}>
+                            <MenuItem
+                              className={cx(isSponsor && 'group hover:!text-fuchsia-300')}
+                              animated={['flicker']}
                             >
-                              {ACTION_ICONS[item.icon ?? item.label.toLowerCase()] ?? (
-                                /*
+                              <a
+                                className={cx(
+                                  '!gap-0',
+                                  isSponsor && 'group-hover:text-fuchsia-300'
+                                )}
+                                href={item.href}
+                                target={item.icon ?? item.label.toLowerCase()}
+                                title={item.label}
+                              >
+                                {ACTION_ICONS[item.icon ?? item.label.toLowerCase()] ?? (
+                                  /*
                                   An icon this shell does not know is not a reason to
                                   hide the link: the label is shown instead.
                                 */
-                                <span className="font-cta text-size-10 uppercase">
-                                  {item.label}
-                                </span>
-                              )}
-                              {isSponsor && (
-                                <div
-                                  className={cx(
-                                    'grid grid-flow-row grid-cols-[0fr]',
-                                    'transition-all ease-out duration-200',
-                                    'group-hover:grid-cols-[1fr] group-hover:pl-2'
-                                  )}
-                                >
-                                  <div className="overflow-hidden">{item.label}</div>
-                                </div>
-                              )}
-                            </a>
-                          </MenuItem>
-                        </Animator>
-                      )
-                    })}
-                  </Menu>
+                                  <span className="font-cta text-size-10 uppercase">
+                                    {item.label}
+                                  </span>
+                                )}
+                                {isSponsor && (
+                                  <div
+                                    className={cx(
+                                      'grid grid-flow-row grid-cols-[0fr]',
+                                      'transition-all ease-out duration-200',
+                                      'group-hover:grid-cols-[1fr] group-hover:pl-2'
+                                    )}
+                                  >
+                                    <div className="overflow-hidden">{item.label}</div>
+                                  </div>
+                                )}
+                              </a>
+                            </MenuItem>
+                          </Animator>
+                        )
+                      })}
+                    </Menu>
+                  )}
 
                   <Menu className={HEIGHT_CLASS}>
                     <Animator>
